@@ -4,6 +4,7 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 
+
 import numpy as np
 from psycopg2.extensions import register_adapter, AsIs
 psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
@@ -63,7 +64,7 @@ def process_log_file(cur, filepath):
         # insert songplay record
         songplay_data = (pd.to_datetime(row.ts, unit="ms"), row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
-        conn.commit()
+        
 
 
 def process_data(cur, conn, filepath, func):
