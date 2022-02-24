@@ -4,28 +4,31 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 
-
-import numpy as np
-from psycopg2.extensions import register_adapter, AsIs
-psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
-
 def process_song_file(cur, filepath):
-    # open song file
+    """
+    - Reads in Song data
+    - Extacts, Transforms, and Loads data to songs and artist tables
+    """
     df = pd.read_json(filepath, lines=True)
 
     # insert song record
     songs_columns = ['song_id', 'title', 'artist_id', 'year', 'duration']
-    song_data = df[songs_columns].iloc[0, :].tolist()
+    song_data = df[songs_columns].values.tolist()[0]
     cur.execute(song_table_insert, song_data)
     
     # insert artist record
     artist_columns = ['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']
-    artist_data = df[artist_columns].iloc[0].tolist()
+    artist_data = df[artist_columns].values.tolist()[0]
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
-    # open log file
+    """
+    - Reads in log data
+    - Filters log page by 'NextSong' button used
+    - Extacts, Transforms, and Loads data to songplay, time and user tables
+    - Call query to extract song and arist ID for songplays table
+    """
     df = pd.read_json(filepath, lines=True) 
 
     # filter by NextSong action
@@ -69,6 +72,10 @@ def process_log_file(cur, filepath):
 
 def process_data(cur, conn, filepath, func):
     # get all files matching extension from directory
+    """
+    -Extacts returns data from repository
+    -Prints progress of data file processing
+    """
     all_files = []
     for root, dirs, files in os.walk(filepath):
         files = glob.glob(os.path.join(root,'*.json'))
@@ -87,6 +94,10 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    - Main function to execute all other ETL functions
+    - Opens database connection and closes after ETL process finished 
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
