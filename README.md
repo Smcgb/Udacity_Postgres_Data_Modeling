@@ -4,9 +4,6 @@ This project was assigned using a subset of Sparkify song and log data to parse 
 File Structure
 The files in the repository are as follows:
 
-data.zip:
-This contains the source data provided by Udacity to complete the project in a Song and Log subfile.
-
 sql_queries.py
 This contains the queries that drops the tables if they exist, creates the tables, inserts extracted data from the datasets to the tables and a select query that gets the songid and artistid.
 
@@ -29,9 +26,6 @@ Running Scripts
 Requirements
 Python 3
 Postgresql
-
-Unzip the data.zip file into the environment in which you will run the below scripts
-
 To drop or create the tables, ensure you are in the project's directory then run the following command:
 
 python create_tables.py
